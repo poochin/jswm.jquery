@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "DTD/xhtml1-strict.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+		<meta name="Author" content="Ed Sanders" />
+		<meta name="Copyright" content="Copyright 2003-2007 Ed Sanders. All rights reserved." />
+		<link rel="stylesheet" type="text/css" href="jswm.css" />
+    
+    <script src="jquery-1.6.2.min.js" type="text/javascript"></script>
+    <script src="jquery-ui-1.8.16.custom.min.js" type="text/javascript"></script>
+    <script src="jswm.jquery.js" type="text/javascript"></script>
+		<!-- Firefox theme -->
+		<link rel="stylesheet" type="text/css" href="themes/redmond/style.css" />
+		<script type="text/javascript" src="themes/redmond/config.js"></script>
+
+		<title>JSWindow test</title>
+	</head>
+	<body>
+		<ul id="test">
+			<li>JSWM methods (id="test")<ul>
+				<li><code>cascade()</code> <input type="button" value="test" onclick="windowManager.cascade();" /></li>
+				<li><code>collapseAll()</code> <input type="button" value="test" onclick="windowManager.collapseAll();" /></li>
+				<li><code>expandAll()</code> <input type="button" value="test" onclick="windowManager.expandAll();" /></li>
+				<li><code>
+					openElement(&lt;HTMLObject&gt; contents, &lt;int&gt; w, &lt;int&gt; h, l, t, &lt;JSWindowOptions&gt; options, &lt;boolean&gt; force)<br />
+					openElement(<input type="text" value="'test', 700, 400, 'center', 'center', {title: 'Wrapped content window', icon: 'images/folder.png'}" size="60" id="openElement" />)
+					<input type="button" value="test" onclick="eval('windowManager.openElement(' + $('#openElement').val() + ');');" />
+				</code></li>
+				<li><code>
+					openNew(&lt;int&gt; w, &lt;int&gt; h, l, t, &lt;JSWindowOptions&gt; options)<br />
+					openNew(<input type="text" value="500, 300, 'right', 'center', {title: 'JS filled window', icon: 'images/note.png'}" size="60" id="openNew" />)
+					<input type="button" value="test" onclick="eval('windowManager.openNew(' + $('#openNew').val() + ');');" />
+				</code></li>
+				<li><code>
+					openURI(&lt;string&gt; uri, &lt;int&gt; w, &lt;int&gt; h, l, t, &lt;JSWindowOptions&gt; options)<br />
+					openURI(<input type="text" value="'http://www.google.com', 500, 300, 'right', 'top', {title: 'iframe', icon: 'images/web.png'}" size="60" id="openURI" />)
+					<input type="button" value="test" onclick="eval('windowManager.openURI(' + $('#openURI').val() + ');');" />
+				</code></li>
+				<li><code>tile()</code> <input type="button" value="test" onclick="windowManager.tile();" /></li>
+			</ul></li>
+		</ul>
+
+		<div id="content1" style="padding: 1em;"><h3>HTML content (id="content1")</h3>
+			Wrap this content as the first window then click <a href="#" onclick="windowManager.windows[0].openTab('image1'); return false;">here</a> to add image1 as a tab.
+			<br /><br />
+			Lorem ipsum dolor sit amet, consectetuer adipiscing elit. In vehicula felis vel massa. Aliquam blandit quam vel tortor. Donec mollis neque tempus purus. Aliquam venenatis libero quis dui. Donec purus dolor, varius quis, feugiat ac, auctor commodo, justo. Ut nisi. Morbi commodo mauris eu sapien fermentum fermentum. Quisque sed erat. Sed vitae sapien eget mi molestie ultricies
+			<br />
+			<img src="http://www.google.com/intl/en_ALL/images/logo.gif" alt="image" />
+			<br />
+			Curabitur ultricies accumsan nibh. Aenean ut metus. Aenean dapibus, lectus eu iaculis ornare, purus neque eleifend ligula, vitae euismod erat tellus at dui. Aliquam at pede. Mauris sit amet neque. Donec leo tortor, tempor ultrices, fermentum eget, ultrices non, massa. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos hymenaeos.
+		</div>
+		<div id="image1">
+			<strong>id="image1"</strong><br />
+			<img src="http://images.sourceforge.net/sfx/sfx_logo2.png" alt="image">
+		</div>
+		<script type="text/javascript"><!--
+      var windowManager;
+      if (typeof jQuery != 'undefined') {
+        $(document).ready(function() {
+  		  	windowManager = new JSWM();
+        });
+      }
+      else {
+        windowManager = new JSWM();
+      }
+		--></script>
+	</body>
+</html>
