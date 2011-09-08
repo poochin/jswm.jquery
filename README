@@ -1,0 +1,9 @@
+JavaScript Window Manager for jQuery
+
+original code is
+    http://jswm.sourceforge.net/
+It uses prototype.js
+
+Change log:
+2011-09-09.
+    convert into jQuery code.
