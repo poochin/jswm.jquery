@@ -1,6 +1,6 @@
 .JSWM_manager
 {
-  width: 0;
+    width: 0;
 	height: 0;
 	position: absolute;
 	top: 0;
@@ -18,6 +18,18 @@
 	border: 1px solid;
 	height: 20px;
 	line-height: 20px;
+}
+
+.JSWM_button
+{
+    cursor: pointer;
+}
+
+.JSWM_iframe
+{
+    border: 0;
+    width: 100%;
+    height: 100%;
 }
 
 .JSWM_window_active .JSWM_window_handle
@@ -104,7 +116,7 @@
 
 .JSWM_tabList
 {
-    position: relative;
+    position: static;
 	height: 21px;
 	border-bottom: 1px solid;
 	padding: 0;

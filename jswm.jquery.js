@@ -9,6 +9,11 @@
  * @depend jquery-ui/draggable
  */
 
+/*
+Change log stack:
+  add class JSWM_Button
+*/
+
 var JSWM;
 
 (function ($) {
@@ -30,9 +35,7 @@ var JSWM;
 
     ImageButton = function (f, src, alt, title, hoverSrc) {
         var img = document.createElement('IMG');
-        $(img).click(f).css({
-            cursor: 'pointer'
-        }).attr({
+        $(img).click(f).addClass('JSWM_button').attr({
             src: src,
             title: title
         });
@@ -179,9 +182,7 @@ var JSWM;
      */
     ExpandButton = function (f) {
         this.img = document.createElement('IMG');
-        $(this.img).click(f).css({
-            cursor: 'pointer'
-        }).attr({
+        $(this.img).click(f).addClass('JSWM_button').attr({
             alt: '+/-'
         });
         return this;
@@ -328,11 +329,7 @@ var JSWM;
         var iFrame = document.createElement('IFRAME');
         iFrame.src = uri;
         iFrame.name = 'iframe' + Math.round(Math.random() * 1000000);
-        $(iFrame).css({
-            border: '0',
-            width: '100%',
-            height: '100%'
-        });
+        $(iFrame).addClass('JSWM_iframe');
         var jsWindow = new JSWindow(this, w, h, l, t, options, iFrame);
         $(jsWindow.lastActiveTab.contents).css({
             overflow: 'hidden'
@@ -388,7 +385,7 @@ var JSWM;
      * @param {JSWindow} jsWindow  Window to make active
      */
     JSWM.prototype.setActiveWindow = function (jsWindow) {
-        jsWindow.container.style.zIndex = this.topZIndex;
+        $(jsWindow.container).css({zIndex: this.topZIndex});
         this.topZIndex++;
 
         $(jsWindow.container).addClass('JSWM_window_active');
@@ -484,7 +481,7 @@ var JSWM;
         }
         this.tabList = this.contents.appendChild(document.createElement('UL'));
         $(this.tabList).addClass('JSWM_tabList');
-        $(this.tabList).sortable({axis: 'x', containment: 'parent'});
+        $(this.tabList).sortable({axis: 'x', containment: 'parent', tolerance: 'pointer'});
 
         if (!contents)
             contents = document.createElement('DIV');
@@ -784,7 +781,7 @@ var JSWM;
         }
 
         if (this.fadeTabs && this.lastActiveTab != jsTab) {
-            $(jsTab.contents).css({display: 'none'}, {duration: 200});
+            $(jsTab.contents).animate({display: 'none'}, {duration: 200});
         } else {
             $(jsTab.contents).css({
                 display: 'block'
@@ -927,8 +924,8 @@ var JSWM;
     JSWindow.prototype.getPosition = function () {
         // can i use $.offset().left ?
         return {
-            left: parseInt(this.container.style.left) - this.manager.margins[3],
-            top: parseInt(this.container.style.top) - this.manager.margins[0]
+            left: parseInt($(this.container).css('left')) - this.manager.margins[3],
+            top: parseInt($(this.container).css('top')) - this.manager.margins[0]
         };
     };
 
@@ -1033,11 +1030,11 @@ var JSWM;
         }
         if (l != null) {
             l += this.manager.margins[3];
-            this.container.style.left = l + 'px';
+            $(this.container).css({left: l + 'px'});
         }
         if (t != null) {
             t += this.manager.margins[0]
-            this.container.style.top = t + 'px';
+            $(this.container).css({top: t + 'px'});
         }
     };
 
@@ -1088,16 +1085,16 @@ var JSWM;
             if(this.expanded)
                 h += 2; // combined border width of top and bottom
             */
-            this.shadowNE.style.left = w + 'px';
-            this.shadowSE.style.left = w + 'px';
-            this.shadowE.style.left = w + 'px';
-            this.shadowSW.style.top = h + 'px';
-            this.shadowSE.style.top = h + 'px';
-            this.shadowS.style.top = h + 'px';
+            $(this.shadowNE).css({left: w + 'px'});
+            $(this.shadowSE).css({left: w + 'px'});
+            $(this.shadowE).css({left: w + 'px'});
+            $(this.shadowSW).css({top: h + 'px'});
+            $(this.shadowSE).css({top: h + 'px'});
+            $(this.shadowS).css({top: h + 'px'});
             if (w > 6)
-                this.shadowS.style.width = (w - 6) + 'px'
+                $(this.shadowS).css({width: (w - 6) + 'px'});
             if (h > 6)
-                this.shadowE.style.height = (h - 6) + 'px';
+                $(this.shadowE).css({height: (h - 6) + 'px'});
         }
     };
 
@@ -1132,7 +1129,7 @@ var JSWM;
             this.restoreSize = serialData.restoreSize;
             this.restorePosition = serialData.restorePosition;
         }
-        this.contents.style.zIndex = serialData.zIndex;
+        $(this.contents).css({zIndex: serialData.zIndex});
         this.tabs[0].close();
         for (var i = 0; i < serialData.tabs.length; i++) {
             var t = serialData.tabs[i];
@@ -1163,7 +1160,7 @@ var JSWM;
         }
 
         serialData.expanded = this.expanded;
-        serialData.zIndex = this.container.style.zIndex;
+        serialData.zIndex = $(this.container).css('zIndex');;
         serialData.tabs = new Array();
         for (var i = 0; i < this.tabs.length; i++) {
             serialData.tabs[i] = this.tabs[i].writeObject();
@@ -1194,13 +1191,13 @@ var JSWM;
      * @param {string} title  Tab title
      * @param {string} icon  Tab icon uri
      */
-
     JSTab = function (jsWindow, contents, title, icon) {
         var _this = this;
         this.jsWindow = jsWindow;
         this.contents = contents;
         $(this.contents).addClass('JSWM_window_tab');
         this.tabButton = document.createElement('LI');
+        $(this.tabButton).css({float: 'left'});
         $(this.tabButton).addClass('JSWM_tabButton');
         this.tabButton.jsTab = this;
 
