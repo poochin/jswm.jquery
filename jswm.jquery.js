@@ -3,33 +3,22 @@
  * @author Ed Sanders
  * @writer poochin
  * @version 0.5-
- * @version 0.1
+ * @version 0.1.1
  * @lisence GPLv2
  * @depend jquery
  * @depend jquery-ui/draggable
  */
-// MEMO: Remove lastActiveWindow
-// MEMO: class を namespace にまとめる
-// MEMO: CSS max-height, max-width の利用
-// MEMO: Default 値を設定する
-// MEMO: Lineclear は CSS:after を使用する方向で廃止する
+
 var JSWM;
 
 (function ($) {
-/*
-  JSWMLib = {
-      Version: '0.1',
-      load: function() {}
-  };
-  JSWMLib.load();
-  */
-
-    // TODO: [Revoke] we have clearfix
-    Lineclear = function () {
-        var lc = document.createElement('div');
-        $(lc).addClass('JSWM_lineclear').html('<span></span>');
-        return lc;
+    /*
+    JSWMLib = {
+        Version: '0.1',
+        load: function() {}
     };
+    JSWMLib.load();
+    */
 
     TextButton = function (f, text, title) {
         var a = document.createElement('A');
@@ -57,15 +46,6 @@ var JSWM;
         }
         return img;
     };
-
-/* [Revoke] jquery has $(elem).empty()
-  Element.prototype.removeChildren = function (object)
-  {
-      while(object.firstChild)
-          object.removeChild(object.firstChild);
-  };
-  */
-
 
     /**
      * Truncate text inside a span using log a binary search
@@ -109,13 +89,16 @@ var JSWM;
                 var dataProp = data[i].prop;
                 this.versionSearchString = data[i].versionSearch || data[i].identity;
                 if (dataString) {
-                    if (dataString.indexOf(data[i].subString) != -1) return data[i].identity;
-                } else if (dataProp) return data[i].identity;
+                    if (dataString.indexOf(data[i].subString) != -1)
+                        return data[i].identity;
+                } else if (dataProp)
+                    return data[i].identity;
             }
         },
         searchVersion: function (dataString) {
             var index = dataString.indexOf(this.versionSearchString);
-            if (index == -1) return;
+            if (index == -1)
+                return;
             return parseFloat(dataString.substring(index + this.versionSearchString.length + 1));
         },
         dataBrowser: [{
@@ -251,9 +234,11 @@ var JSWM;
         this.windows = new Array();
         this.topZIndex = 100;
         this.lastActiveWindow = null;
-        if (!margins) margins = [0, 0, 0, 0];
+        if (!margins)
+            margins = [0, 0, 0, 0];
         this.margins = margins;
-        if (!constraints) constraints = [true, false, false, false];
+        if (!constraints)
+            constraints = [true, false, false, false];
         this.constraints = constraints;
         return this;
     };
@@ -305,7 +290,8 @@ var JSWM;
      */
     JSWM.prototype.collapseAll = function () {
         for (var i = 0; i < this.windows.length; i++)
-        if (!this.windows[i].noCollapse) this.windows[i].expand(false);
+        if (!this.windows[i].noCollapse)
+            this.windows[i].expand(false);
     };
 
     /**
@@ -314,7 +300,8 @@ var JSWM;
      */
     JSWM.prototype.expandAll = function () {
         for (var i = 0; i < this.windows.length; i++)
-        if (!this.windows[i].noCollapse) this.windows[i].expand(true);
+        if (!this.windows[i].noCollapse)
+            this.windows[i].expand(true);
     };
 
     /**
@@ -363,7 +350,8 @@ var JSWM;
         contents = $(contents).get(0) || $('#' + contents).get(0);
         for (var i = 0; i < this.windows.length; i++)
         for (var j = 0; j < this.windows[i].tabs.length; j++)
-        if (this.windows[i].tabs[j].contents.firstChild == contents) return true;
+        if (this.windows[i].tabs[j].contents.firstChild == contents)
+            return true;
         return false;
     };
 
@@ -377,7 +365,8 @@ var JSWM;
      * @param {boolean} force  Re wrap contents even if already wrapped
      */
     JSWM.prototype.openElement = function (contents, w, h, l, t, options, force) {
-        if (!force && this.isWrapped(contents)) return; // return if content already wrapped
+        if (!force && this.isWrapped(contents))
+            return; // return if content already wrapped
         var jsWindow = new JSWindow(this, w, h, l, t, options, contents);
         this.addWindow(jsWindow)
     };
@@ -403,7 +392,8 @@ var JSWM;
         this.topZIndex++;
 
         $(jsWindow.container).addClass('JSWM_window_active');
-        if (this.lastActiveWindow && this.lastActiveWindow != jsWindow) $(this.lastActiveWindow.container).removeClass('JSWM_window_active');
+        if (this.lastActiveWindow && this.lastActiveWindow != jsWindow)
+            $(this.lastActiveWindow.container).removeClass('JSWM_window_active');
         this.lastActiveWindow = jsWindow;
     };
 
@@ -441,7 +431,8 @@ var JSWM;
         serialData.windows = new Array();
         for (var i = 0; i < this.windows.length; i++) {
             serialData.windows[i] = this.windows[i].writeObject();
-            if (this.windows[i] == this.lastActiveWindow) serialData.lastActiveWindow = i;
+            if (this.windows[i] == this.lastActiveWindow)
+                serialData.lastActiveWindow = i;
         }
         return serialData;
     };
@@ -456,7 +447,8 @@ var JSWM;
             var w = serialData.windows[i];
             var jsWindow = new JSWindow(this, w.size.width, w.size.height, w.position.left, w.position.top, w.options);
             this.addWindow(jsWindow)
-            if (serialData.lastActiveWindow == i) jsWindow.setActive();
+            if (serialData.lastActiveWindow == i)
+                jsWindow.setActive();
             jsWindow.readObject(w);
         }
     };
@@ -492,9 +484,10 @@ var JSWM;
         }
         this.tabList = this.contents.appendChild(document.createElement('UL'));
         $(this.tabList).addClass('JSWM_tabList');
+        $(this.tabList).sortable({axis: 'x', containment: 'parent'});
 
-        this.contents.appendChild(new Lineclear());
-        if (!contents) contents = document.createElement('DIV');
+        if (!contents)
+            contents = document.createElement('DIV');
         this.openTab(contents);
 
         $(this.container).css({
@@ -681,7 +674,8 @@ var JSWM;
 
         this.titleLabel = this.handle.appendChild(document.createElement('DIV'));
         $(this.titleLabel).addClass('JSWM_window_title');
-        if (!this.options.title) this.options.title = '';
+        if (!this.options.title)
+            this.options.title = '';
         this.setTitle(this.options.title, this.options.icon);
 
         if (!this.options.noDrag) {
@@ -705,7 +699,6 @@ var JSWM;
                 _this.setActive();
             });
         }
-        this.handle.appendChild(new Lineclear());
         switch (String(l).toLowerCase()) {
         case 'left':
             l = 0;
@@ -747,9 +740,11 @@ var JSWM;
     JSWindow.prototype.openTab = function (contents, force) {
         var _this = this;
         contents = $(contents).get(0) || $('#' + contents).get(0);
-        if (!force && contents && this.manager.isWrapped(contents)) return false;
+        if (!force && contents && this.manager.isWrapped(contents))
+            return false;
         var tabContents = document.createElement('DIV');
-        if (contents) tabContents.appendChild(contents);
+        if (contents)
+            tabContents.appendChild(contents);
         var jsTab = new JSTab(this, tabContents, this.tabs.length + 'long tab name ' + this.tabs.length, 'images/tab.png');
         this.addTab(jsTab)
     };
@@ -774,40 +769,32 @@ var JSWM;
      * @param {Element} jsTab  Tab to make active
      */
     JSWindow.prototype.setActiveTab = function (jsTab) {
-        // if you know that scope: scope isn't neccesary, delete it.
         var redraw = false;
-        if (this.fadeTabs) var scope = "tab" + Math.random();
+        if (this.fadeTabs)
+            var scope = "tab" + Math.random();
+
         if (this.lastActiveTab && this.lastActiveTab != jsTab) {
             if (this.fadeTabs) {
-                // this.lastActiveTab.contents.style.display = 'block';
-                // new Effect.Fade(this.lastActiveTab.contents, {duration: .2, queue: {position: 'end', scope: scope}});
-                $(this.lastActiveTab.contents).animate({
-                    display: 'block'
-                }, {
-                    duration: 200
-                });
+                $(this.lastActiveTab.contents).animate({display: 'block'}, {duration: 200});
             } else {
-                $(this.lastActiveTab.contents).css({
-                    display: 'none'
-                });
+                $(this.lastActiveTab.contents).css({display: 'none'});
             }
             $(this.lastActiveTab.tabButton).removeClass('JSWM_tabButton_active');
             redraw = true;
         }
+
         if (this.fadeTabs && this.lastActiveTab != jsTab) {
-            // jsTab.contents.style.display = 'none';
-            // new Effect.Appear(jsTab.contents, {duration: .2, queue: {position: 'end', scope: scope}});
-            $(jsTab.contents).css({
-                display: 'none'
-            });
+            $(jsTab.contents).css({display: 'none'}, {duration: 200});
         } else {
             $(jsTab.contents).css({
                 display: 'block'
             });
         }
+
         $(jsTab.tabButton).addClass('JSWM_tabButton_active');
         this.lastActiveTab = jsTab;
-        if (redraw) this.setSize(0, 0, 0, true);
+        if (redraw)
+            this.setSize(0, 0, 0, true);
     };
 
     /**
@@ -817,13 +804,9 @@ var JSWM;
      */
     JSWindow.prototype.redrawTabList = function (force) {
         if (this.tabs.length <= 1) {
-            $(this.tabList).css({
-                display: 'none'
-            });
+            $(this.tabList).css({display: 'none'});
         } else {
-            $(this.tabList).css({
-                display: 'block'
-            });
+            $(this.tabList).css({display: 'block'});
             var w = this.getSize().width - 20;
             var tabWidth = Math.floor(w / this.tabs.length);
             tabWidth = Math.min(tabWidth, this.maxTabButtonWidth);
@@ -873,8 +856,10 @@ var JSWM;
      */
     JSWindow.prototype.expand = function (expand) {
         if (expand == null || expand != this.expanded) {
-            if (expand == null) this.expanded = !this.expanded;
-            else this.expanded = expand
+            if (expand == null)
+                this.expanded = !this.expanded;
+            else
+                this.expanded = expand
             $(this.slide).animate({
                 height: 'toggle'
             }, {
@@ -940,7 +925,7 @@ var JSWM;
      * @return {object}  Object containing .left and .top
      */
     JSWindow.prototype.getPosition = function () {
-        // can use $.offset().left ?
+        // can i use $.offset().left ?
         return {
             left: parseInt(this.container.style.left) - this.manager.margins[3],
             top: parseInt(this.container.style.top) - this.manager.margins[0]
@@ -973,8 +958,10 @@ var JSWM;
             w = size.width;
             h = size.height;
         }
-        if (w == null) w = size.width;
-        if (h == null || !this.expanded) h = size.height;
+        if (w == null)
+            w = size.width;
+        if (h == null || !this.expanded)
+            h = size.height;
 
         w = Math.max(w, this.minWidth);
         h = Math.max(h, this.minHeight);
@@ -1039,8 +1026,10 @@ var JSWM;
     JSWindow.prototype.setPosition = function (l, t, relative) {
         if (relative) {
             var position = this.getPosition();
-            if (l != null) l += position.left;
-            if (t != null) t += position.top;
+            if (l != null)
+                l += position.left;
+            if (t != null)
+                t += position.top;
         }
         if (l != null) {
             l += this.manager.margins[3];
@@ -1095,18 +1084,20 @@ var JSWM;
         if (!this.options.noShadow && pngSupport) {
             var w = $(this.innerContainer).width();
             var h = $(this.innerContainer).height();
-/*
-      if(this.expanded)
-        h += 2; // combined border width of top and bottom
-      */
+            /*
+            if(this.expanded)
+                h += 2; // combined border width of top and bottom
+            */
             this.shadowNE.style.left = w + 'px';
             this.shadowSE.style.left = w + 'px';
             this.shadowE.style.left = w + 'px';
             this.shadowSW.style.top = h + 'px';
             this.shadowSE.style.top = h + 'px';
             this.shadowS.style.top = h + 'px';
-            if (w > 6) this.shadowS.style.width = (w - 6) + 'px'
-            if (h > 6) this.shadowE.style.height = (h - 6) + 'px';
+            if (w > 6)
+                this.shadowS.style.width = (w - 6) + 'px'
+            if (h > 6)
+                this.shadowE.style.height = (h - 6) + 'px';
         }
     };
 
@@ -1148,7 +1139,8 @@ var JSWM;
             var jsTab = new JSTab(this, document.createElement('DIV'), t.title, t.icon);
             this.addTab(jsTab);
             jsTab.readObject(t);
-            if (serialData.lastActiveWindow == i) jsWindow.setActive();
+            if (serialData.lastActiveWindow == i)
+                jsWindow.setActive();
         }
     };
 
@@ -1175,7 +1167,8 @@ var JSWM;
         serialData.tabs = new Array();
         for (var i = 0; i < this.tabs.length; i++) {
             serialData.tabs[i] = this.tabs[i].writeObject();
-            if (this.tabs[i] == this.lastActiveTab) serialData.lastActiveTab = i;
+            if (this.tabs[i] == this.lastActiveTab)
+                serialData.lastActiveTab = i;
         }
         return serialData;
     };
@@ -1187,7 +1180,8 @@ var JSWM;
     JSWindow.prototype.close = function () {
         _this = this;
         this.manager.windows = $(this.manager.windows).map(function () {
-            if (this != _this) return this;
+            if (this != _this)
+                return this;
         });
         this.container.parentNode.removeChild(this.container);
     };
@@ -1223,74 +1217,7 @@ var JSWM;
             _this.setActive();
             _this.jsWindow.setActive();
         });
-        $(this.tabButton).draggable({
-            // connectToSortable: this.tabList,
-            start: function (drag) {
-                _this.jsWindow.dragTabStart(this);
-            },
-            drag: function (drag, ui) {
-                // TODO: running with wrong.
-                var pos = _this.moveTab(ui.position.left, ui.position.top);
-                if (pos[0] != ui.position.left) {
-                    // ui.originalPosition.left = (ui.position.left - pos[0]) % $(this).width();
-                    // ui.position.left = ui.originalPosition.left % $(this).width();
-                }
-            },
-            axis: 'x',
-            revert: true,
-        });
-
-        return this;
-    };
-
-    /**
-     * Reorder tabs based on drag offset
-     * @method
-     * @param {int} xOffset  x coordinate offset
-     * @param {int} yOffset  y coordinate offset
-     */
-    JSTab.prototype.moveTab = function (xOffset, yOffset) {
-        var tabSize = $(this.tabButton).width();
-        var tabGap = tabSize / 2;
-        var isForward = xOffset > tabGap;
-        var isBackward = xOffset < -tabGap;
-        if (isForward || isBackward) {
-            for (var i = this.jsWindow.tabPositions.length - 1; i >= 0; i--) {
-                var offset = this.jsWindow.tabPositions[i];
-                var start = this.jsWindow.start;
-                if (i != this.i && offset[0] - tabGap < xOffset + start[0]) {
-                    // i: first box positioned before this
-                    var of = $(this.tabButton).position();
-                    var oldOffset = [of.left, of.top]; // Position.positionedOffset(this.tabButton);
-                    if (i + 1 == this.jsWindow.tabPositions.length) {
-                        if (!isForward) break;
-                        this.jsWindow.tabList.appendChild(this.tabButton);
-                    } else if (i > this.i) {
-                        if (!isForward) break;
-                        this.jsWindow.tabList.insertBefore(this.tabButton, this.jsWindow.tabs[i + 1].tabButton);
-                    } else {
-                        if (!isBackward) break;
-                        this.jsWindow.tabList.insertBefore(this.tabButton, this.jsWindow.tabs[i].tabButton);
-                    }
-                    var of = $(this.tabButton).position();
-                    var newOffset = [of.left, of.top]; // Position.positionedOffset(this.tabButton);
-                    // prevent "jumping" effect
-                    xOffset -= newOffset[0] - oldOffset[0];
-
-                    var items = this.jsWindow.tabList.getElementsByTagName('LI');
-                    for (var j = 0; j < items.length; j++) {
-                        this.jsWindow.tabs[j] = items[j].jsTab;
-                        this.jsWindow.tabs[j].i = j;
-                    }
-                    this.jsWindow.start = [offset[0], offset[1]];
-
-                    break;
-                }
-            }
-        }
-        xOffset = Math.max(JSWMTabMargins - 1, xOffset + this.jsWindow.start[0]) - this.jsWindow.start[0];
-        xOffset = Math.min(xOffset + this.jsWindow.start[0], $(this.jsWindow.tabList).width() - tabSize) - this.jsWindow.start[0];
-        return [xOffset, yOffset];
+       return this;
     };
 
     /**
@@ -1301,7 +1228,6 @@ var JSWM;
      */
     JSTab.prototype.setTitle = function (title, icon) {
         this.title = title;
-        // $(this.titleLabel).html('<span>' + this.title + '</span>');
         $(this.titleLabel).empty();
         var span = this.titleLabel.appendChild(document.createElement('SPAN'));
         span.appendChild(document.createTextNode(this.title));
@@ -1340,10 +1266,12 @@ var JSWM;
         this.jsWindow.contents.removeChild(this.contents); // remove contents
         this.tabButton.parentNode.removeChild(this.tabButton); // remove button
         this.jsWindow.tabs = $(this.jsWindow.tabs).map(function () {
-            if (this != _this) return this;
+            if (this != _this)
+                return this;
         });
 
-        if (this.jsWindow.lastActiveTab == this && this.jsWindow.tabs.length) this.jsWindow.tabs[0].setActive();
+        if (this.jsWindow.lastActiveTab == this && this.jsWindow.tabs.length)
+            this.jsWindow.tabs[0].setActive();
         this.jsWindow.redrawTabList();
     };
 

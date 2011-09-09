@@ -104,6 +104,7 @@
 
 .JSWM_tabList
 {
+    position: relative;
 	height: 21px;
 	border-bottom: 1px solid;
 	padding: 0;
